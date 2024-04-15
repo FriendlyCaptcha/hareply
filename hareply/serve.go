@@ -78,6 +78,7 @@ func (a *App) handle(ctx context.Context, conn net.Conn) {
 
 	response, err := a.updateResponse()
 	if err != nil {
+		response = a.lastValidResponse
 		a.logger.ErrorContext(ctx, "failed to update response, will use cached value", slog.String("error", err.Error()))
 	}
 

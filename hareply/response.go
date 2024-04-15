@@ -28,17 +28,22 @@ func (a *App) readResponseFromFile() ([]byte, error) {
 	return b, nil
 }
 
-// updateResponse reads the response from the file and updates the response field.
-// It returns the new response and any error that occurred. If an error occurred,
-// the response field is not updated and the last known response is returned.
+// updateResponse reads the response from the file and updates the `lastValidResponse` field.
+// If the response is invalid or could not be read, nil is returned
 func (a *App) updateResponse() ([]byte, error) {
 	a.Lock()
 	defer a.Unlock()
 
 	b, err := a.readResponseFromFile()
 	if err != nil {
-		return a.response, err
+		return nil, err
 	}
-	a.response = b
-	return a.response, nil
+
+	err = ValidateAgentCheckResponse(string(b))
+	if err != nil {
+		return nil, fmt.Errorf("invalid response: %w", err)
+	}
+
+	a.lastValidResponse = b
+	return b, nil
 }

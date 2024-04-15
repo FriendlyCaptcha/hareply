@@ -16,9 +16,9 @@ type App struct {
 	port int
 
 	// fs is the file system to use for reading the response file. If `nil`, the host file system is used.
-	fs       fs.FS
-	filepath string
-	response []byte
+	fs                fs.FS
+	filepath          string
+	lastValidResponse []byte
 
 	logger   *slog.Logger
 	listener net.Listener

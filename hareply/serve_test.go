@@ -37,24 +37,34 @@ func TestServe(t *testing.T) {
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 		defer cancel()
 
-		file := testhelper.SetupAgentStateFile(t, "test")
+		file := testhelper.SetupAgentStateFile(t, "up\n")
 		app, err := New(file, WithPort(0))
 		require.NoError(t, err)
 
 		addr := startApp(ctx, t, app)
-		assert.Equal(t, "test", testhelper.DialAndGetResponse(t, addr))
+		assert.Equal(t, "up\n", testhelper.DialAndGetResponse(t, addr))
 
 		// Change contents of the file
-		require.NoError(t, os.WriteFile(file, []byte("new"), 0644))
+		require.NoError(t, os.WriteFile(file, []byte("down\n"), 0644))
 
-		assert.Equal(t, "new", testhelper.DialAndGetResponse(t, addr))
+		assert.Equal(t, "down\n", testhelper.DialAndGetResponse(t, addr))
 
 		// Delete the file
 		require.NoError(t, os.Remove(file))
 
 		// The response should still be the last one
-		assert.Equal(t, "new", testhelper.DialAndGetResponse(t, addr))
+		assert.Equal(t, "down\n", testhelper.DialAndGetResponse(t, addr))
 
+		// Create the file again
+		require.NoError(t, os.WriteFile(file, []byte("up\n"), 0644))
+
+		assert.Equal(t, "up\n", testhelper.DialAndGetResponse(t, addr))
+
+		// Set the file to an invalid state
+		require.NoError(t, os.WriteFile(file, []byte("invalid\n"), 0644))
+
+		// The response should still be the last one
+		assert.Equal(t, "up\n", testhelper.DialAndGetResponse(t, addr))
 	})
 
 	t.Run("already serving", func(t *testing.T) {
@@ -63,7 +73,7 @@ func TestServe(t *testing.T) {
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 		defer cancel()
 
-		file := testhelper.SetupAgentStateFile(t, "test")
+		file := testhelper.SetupAgentStateFile(t, "maint\n")
 		app, err := New(file, WithPort(0))
 		require.NoError(t, err)
 
@@ -90,7 +100,7 @@ func TestServe(t *testing.T) {
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 		defer cancel()
 
-		file := testhelper.SetupAgentStateFile(t, "test")
+		file := testhelper.SetupAgentStateFile(t, "up\n")
 		app, err := New(file, WithPort(0))
 		require.NoError(t, err)
 

@@ -13,8 +13,11 @@ hareply serve -h
 # Print version information
 hareply version
 
-# Serve from port 8442 (which is the default).
+# Serve from port 8020 and a specific path.
 hareply serve -f /some/path/to/agentstate -p 8020
+
+# Serve from port 8442 and filepath `agentstate` (the defaults).
+hareply serve
 ```
 
 ## As a library

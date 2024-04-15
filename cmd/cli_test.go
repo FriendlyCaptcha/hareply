@@ -17,7 +17,7 @@ func TestCLI(t *testing.T) {
 
 	t.Run("serve happy", func(t *testing.T) {
 		t.Parallel()
-		f := testhelper.SetupAgentStateFile(t, "test_response")
+		f := testhelper.SetupAgentStateFile(t, "up 50%\n")
 		port := "8302" // Arbitrary port, we could also use 0 and read it from the stdout of the CLI command.
 
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
@@ -34,7 +34,7 @@ func TestCLI(t *testing.T) {
 
 		time.Sleep(50 * time.Millisecond)
 		resp := testhelper.DialAndGetResponse(t, "localhost:"+port)
-		require.Equal(t, "test_response", resp)
+		require.Equal(t, "up 50%\n", resp)
 	})
 
 	t.Run("unknown command", func(t *testing.T) {
