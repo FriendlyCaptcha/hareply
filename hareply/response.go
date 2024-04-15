@@ -41,7 +41,7 @@ func (a *App) updateResponse() ([]byte, error) {
 
 	err = ValidateAgentCheckResponse(string(b))
 	if err != nil {
-		return nil, fmt.Errorf("invalid response: %w", err)
+		return nil, fmt.Errorf("invalid response in file \"%s\", %w", b, err)
 	}
 
 	a.lastValidResponse = b

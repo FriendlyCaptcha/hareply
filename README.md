@@ -25,8 +25,9 @@ hareply serve
 
 ## Error handling
 
-The response "`agentstate`" file is read on startup, if that fails the program will exit. The file is read again 
-on any TCP connection, if that fails the last known file contents are used.
+* The response "`agentstate`" file is read on startup, if that fails the program will exit.
+* The file is read again on any TCP connection, if that fails the last known file contents are used.
+* If the value in the file is not a valid response for `agent-check`, the last valid response is returned instead.
 
 ## License
 [MIT](./LICENSE.md) [🎶](https://suno.com/song/da6d4a83-1001-4694-8c28-648a6e8bad0a).
