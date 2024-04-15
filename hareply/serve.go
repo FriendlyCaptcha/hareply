@@ -27,7 +27,13 @@ func (a *App) Serve(ctx context.Context) error {
 
 		return fmt.Errorf("failed to listen: %w", err)
 	}
-	defer listener.Close()
+
+	defer func() {
+		closeErr := listener.Close()
+		if closeErr != nil {
+			slog.ErrorContext(ctx, "failed to close listener", slog.String("error", closeErr.Error()))
+		}
+	}()
 
 	a.Lock()
 	a.listener = listener
@@ -39,8 +45,7 @@ func (a *App) Serve(ctx context.Context) error {
 		for {
 			select {
 			case <-ctx.Done():
-				listener.Close()
-				slog.InfoContext(ctx, "listener closed")
+				slog.InfoContext(ctx, "listener closing")
 				return
 			default:
 				conn, err := listener.Accept()
