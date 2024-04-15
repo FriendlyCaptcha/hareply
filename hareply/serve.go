@@ -20,7 +20,7 @@ func (a *App) Serve(ctx context.Context) error {
 		return fmt.Errorf("failed to perform initial update: %w", err)
 	}
 
-	slog.DebugContext(ctx, "initial response loaded", slog.String("response", string(response)))
+	a.logger.DebugContext(ctx, "initial response loaded", slog.String("response", string(response)))
 
 	listener, err := net.Listen("tcp", net.JoinHostPort(a.host, fmt.Sprint(a.port)))
 	if err != nil {
@@ -31,7 +31,7 @@ func (a *App) Serve(ctx context.Context) error {
 	defer func() {
 		closeErr := listener.Close()
 		if closeErr != nil {
-			slog.ErrorContext(ctx, "failed to close listener", slog.String("error", closeErr.Error()))
+			a.logger.ErrorContext(ctx, "failed to close listener", slog.String("error", closeErr.Error()))
 		}
 	}()
 
@@ -39,13 +39,13 @@ func (a *App) Serve(ctx context.Context) error {
 	a.listener = listener
 	a.Unlock()
 
-	slog.InfoContext(ctx, "listening...", slog.String("address", listener.Addr().String()))
+	a.logger.InfoContext(ctx, "listening...", slog.String("address", listener.Addr().String()))
 
 	go func() {
 		for {
 			select {
 			case <-ctx.Done():
-				slog.InfoContext(ctx, "listener closing")
+				a.logger.InfoContext(ctx, "listener closing")
 				return
 			default:
 				conn, err := listener.Accept()
@@ -53,7 +53,7 @@ func (a *App) Serve(ctx context.Context) error {
 					if errors.Is(ctx.Err(), context.Canceled) {
 						continue
 					}
-					slog.ErrorContext(ctx, "failed to accept tcp connection", slog.String("error", err.Error()))
+					a.logger.ErrorContext(ctx, "failed to accept tcp connection", slog.String("error", err.Error()))
 					continue
 				}
 				go a.handle(ctx, conn)
@@ -74,20 +74,20 @@ func (a *App) handle(ctx context.Context, conn net.Conn) {
 		conn.Close()
 	}()
 
-	slog.DebugContext(ctx, "updating response")
+	a.logger.DebugContext(ctx, "updating response")
 
 	response, err := a.updateResponse()
 	if err != nil {
-		slog.ErrorContext(ctx, "failed to update response, will use cached value", slog.String("error", err.Error()))
+		a.logger.ErrorContext(ctx, "failed to update response, will use cached value", slog.String("error", err.Error()))
 	}
 
-	slog.DebugContext(ctx, "writing response", slog.String("response", string(response)))
+	a.logger.DebugContext(ctx, "writing response", slog.String("response", string(response)))
 
 	_, err = conn.Write(response)
 	if err != nil {
-		slog.ErrorContext(ctx, "failed to write response", slog.String("error", err.Error()))
+		a.logger.ErrorContext(ctx, "failed to write response", slog.String("error", err.Error()))
 		return
 	}
 
-	slog.DebugContext(ctx, "response written, closing connection", slog.String("response", string(response)))
+	a.logger.DebugContext(ctx, "response written, closing connection", slog.String("response", string(response)))
 }

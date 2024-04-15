@@ -2,6 +2,7 @@ package hareply
 
 import (
 	"io/fs"
+	"log/slog"
 	"net"
 	"sync"
 )
@@ -17,6 +18,7 @@ type App struct {
 	filepath string
 	response []byte
 
+	logger   *slog.Logger
 	listener net.Listener
 }
 
@@ -27,6 +29,7 @@ type Option func(*App)
 func New(filepath string, opts ...Option) (*App, error) {
 	app := &App{
 		filepath: filepath,
+		logger:   slog.Default(),
 	}
 
 	for _, opt := range opts {
@@ -56,6 +59,14 @@ func WithFS(fs fs.FS) Option {
 func WithHost(host string) Option {
 	return func(a *App) {
 		a.host = host
+	}
+}
+
+// WithLogger sets the logger to use for the hareply application.
+// It defaults to slog.Default()
+func WithLogger(logger *slog.Logger) Option {
+	return func(a *App) {
+		a.logger = logger
 	}
 }
 

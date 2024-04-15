@@ -46,13 +46,14 @@ func CLI(ctx context.Context, w io.Writer, args []string, opts ...kong.Option) e
 		return err
 	}
 
-	setupGlobalLogger(w, cli.Debug)
+	logger := setupLogger(w, cli.Debug)
 
 	switch kctx.Command() {
 	case "serve":
 		app, err := hareply.New(cli.Serve.File,
 			hareply.WithPort(cli.Serve.Port),
 			hareply.WithHost(cli.Serve.Host),
+			hareply.WithLogger(logger),
 		)
 		if err != nil {
 			return err
@@ -66,7 +67,7 @@ func CLI(ctx context.Context, w io.Writer, args []string, opts ...kong.Option) e
 	}
 }
 
-func setupGlobalLogger(w io.Writer, debug bool) {
+func setupLogger(w io.Writer, debug bool) *slog.Logger {
 	lvl := slog.LevelInfo
 	if debug {
 		lvl = slog.LevelDebug
@@ -74,5 +75,5 @@ func setupGlobalLogger(w io.Writer, debug bool) {
 	logger := slog.New(slog.NewJSONHandler(w, &slog.HandlerOptions{
 		Level: lvl,
 	}))
-	slog.SetDefault(logger)
+	return logger
 }
