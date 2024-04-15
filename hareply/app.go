@@ -8,6 +8,8 @@ import (
 )
 
 // App is a hareply application.
+// An application reads responses from a file and serves them over TCP.
+// It can only be started once.
 type App struct {
 	sync.Mutex
 	host string
@@ -55,7 +57,7 @@ func WithFS(fs fs.FS) Option {
 }
 
 // WithHost sets the host to listen on for the hareply application.
-// It defaults to """
+// It defaults to an empty string `""` which means "all interfaces".
 func WithHost(host string) Option {
 	return func(a *App) {
 		a.host = host
@@ -63,7 +65,7 @@ func WithHost(host string) Option {
 }
 
 // WithLogger sets the logger to use for the hareply application.
-// It defaults to slog.Default()
+// It defaults to `slog.Default()“.
 func WithLogger(logger *slog.Logger) Option {
 	return func(a *App) {
 		a.logger = logger
