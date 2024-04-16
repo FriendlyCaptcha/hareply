@@ -22,9 +22,9 @@ func (a *App) Serve(ctx context.Context) error {
 
 	a.logger.DebugContext(ctx, "initial response loaded", slog.String("response", string(response)))
 
-	listener, err := net.Listen("tcp", net.JoinHostPort(a.host, fmt.Sprint(a.port)))
+	lc := net.ListenConfig{}
+	listener, err := lc.Listen(ctx, "tcp", net.JoinHostPort(a.host, fmt.Sprint(a.port)))
 	if err != nil {
-
 		return fmt.Errorf("failed to listen: %w", err)
 	}
 
