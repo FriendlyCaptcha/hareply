@@ -23,7 +23,7 @@ type Config struct {
 		File string `help:"Path to read response from." short:"f" default:"agentstate"`
 	} `cmd:"" help:"Start hareply TCP responder service."`
 
-	Version struct{} `cmd:"" help:"Show version information."`
+	Version kong.VersionFlag
 }
 
 // CLI runs the hareply CLI.
@@ -34,6 +34,7 @@ func CLI(ctx context.Context, w io.Writer, args []string, opts ...kong.Option) e
 		kong.Name("hareply"),
 		kong.Description("A simple TCP server that replies with a response read from a file."),
 		kong.DefaultEnvars("HAREPLY_"),
+		kong.Vars{"version": buildinfo.FullVersion()},
 	)
 
 	kcli, err := kong.New(&cli, opts...)

@@ -34,7 +34,7 @@ func Commit() string {
 }
 
 // Target returns the target operating system that this binary was compiled for,
-// or "" if it is not set. This is injected by goreleaser.
+// or "" if it is not set.
 func Target() string {
 	return runtime.GOOS
 }
