@@ -11,7 +11,7 @@ var (
 	ErrInvalidAgentCheckResponse = errors.New("invalid agent check response value")
 )
 var regexpValidateAgentCheckResponse = regexp.MustCompile(
-	`^((\d{1,3}%|maxconn:\d+|ready|drain|maint|up|((fail|stopped|down)(#\w+)?))([ |\t|,]*))*[\n|\r]+$`,
+	`^((\d{1,3}%|maxconn:\d+|ready|drain|maint|up|((fail|stopped|down)(#[\w_-]+)?))([ |\t|,]*))*[\n|\r]+$`,
 )
 
 // ValidateAgentCheckResponse validates the response, making sure it is a valid response

@@ -55,6 +55,9 @@ func TestValidateAgentCheckResponse(t *testing.T) {
 		{"up\n\n\r", true},
 		{"up\r\n", true},
 		{"up", false},
+		{"down#a_b\n", true},
+		{"down#a-b\n", true},
+		{"down#a.b\n", false},
 	}
 
 	for _, tc := range testCases {
