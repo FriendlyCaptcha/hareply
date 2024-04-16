@@ -1,0 +1,3 @@
+# Options for hareply
+
+HAREPLY_FILE='/etc/hareply/agentstate'
