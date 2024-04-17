@@ -1,0 +1,12 @@
+[Unit]
+Description=hareply
+After=syslog.target network-online.target
+
+[Service]
+EnvironmentFile=/etc/hareply/hareply.conf
+ExecStart=/usr/bin/hareply
+Restart=always
+Type=simple
+
+[Install]
+WantedBy=multi-user.target

@@ -20,4 +20,7 @@
 # Go workspace file
 go.work
 
+# Goreleaser dist output files
+dist/
+
 agentstate
