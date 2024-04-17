@@ -18,9 +18,9 @@ type Config struct {
 	Debug bool `help:"Enable debug mode."`
 
 	Serve struct {
-		Host string `help:"Host to listen on." default:""`
-		Port int    `help:"Port to reply on." short:"p" default:"8442"`
-		File string `help:"Path to read response from." short:"f" default:"agentstate"`
+		Host      string `help:"Host to listen on." default:""`
+		Port      int    `help:"Port to reply on." short:"p" default:"8442"`
+		StateFile string `help:"Path to read response from." short:"f" default:"agentstate"`
 	} `cmd:"" help:"Start hareply TCP responder service."`
 
 	Version kong.VersionFlag
@@ -33,7 +33,7 @@ func CLI(ctx context.Context, w io.Writer, args []string, opts ...kong.Option) e
 	opts = append(opts,
 		kong.Name("hareply"),
 		kong.Description("A simple TCP server that replies with a response read from a file."),
-		kong.DefaultEnvars("HAREPLY_"),
+		kong.DefaultEnvars("HAREPLY"),
 		kong.Vars{"version": buildinfo.FullVersion()},
 	)
 
@@ -51,7 +51,7 @@ func CLI(ctx context.Context, w io.Writer, args []string, opts ...kong.Option) e
 
 	switch kctx.Command() {
 	case "serve":
-		app, err := hareply.New(cli.Serve.File,
+		app, err := hareply.New(cli.Serve.StateFile,
 			hareply.WithPort(cli.Serve.Port),
 			hareply.WithHost(cli.Serve.Host),
 			hareply.WithLogger(logger),
