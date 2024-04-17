@@ -12,6 +12,7 @@ func TestValidateAgentCheckResponse(t *testing.T) {
 		ok       bool
 	}{
 		{"", false},
+		{"\n", true},
 		{"75%\r", true},
 		{"%\r", false},
 		{"-1%\r", false},
