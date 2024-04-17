@@ -1,0 +1,22 @@
+project_name: hareply
+builds:
+  - binary: hareply
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w -X github.com/friendlycaptcha/hareply/buildinfo.version={{.Version}} -X github.com/friendlycaptcha/hareply/buildinfo.commit={{.Commit}} -X github.com/friendlycaptcha/hareply/buildinfo.commitDate={{.CommitDate}}
+archives:
+  - id: hareply-archive
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- .Tag }}_
+      {{- .Os }}_
+      {{- .Arch}}
+    format_overrides:
+      - goos: windows
+        format: zip
