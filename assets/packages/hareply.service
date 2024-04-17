@@ -3,13 +3,10 @@ Description=hareply
 After=syslog.target network-online.target
 
 [Service]
-Environment="PIDFILE=/run/hareply.pid"
-EnvironmentFile=/etc/default/hareply
-ExecStart=/usr/sbin/hareply
-ExecReload=/bin/kill -s SIGUSR1 $MAINPID
+EnvironmentFile=/etc/hareply/hareply.conf
+ExecStart=/usr/bin/hareply
+Restart=always
 Type=simple
-PIDFile=
-GuessMainPID=1
 
 [Install]
 WantedBy=multi-user.target

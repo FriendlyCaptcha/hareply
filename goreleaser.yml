@@ -48,7 +48,7 @@ nfpms:
       - apk
       - deb
       - rpm
-    bindir: /usr/sbin
+    bindir: /usr/bin
     section: net
     priority: optional
     contents:
@@ -65,8 +65,8 @@ nfpms:
           owner: root
           group: root
           mode: 0640
-      - src: assets/packages/default
-        dst: /etc/default/hareply
+      - src: assets/packages/hareply.conf
+        dst: /etc/hareply/hareply.conf
         type: config
         file_info:
           owner: root
