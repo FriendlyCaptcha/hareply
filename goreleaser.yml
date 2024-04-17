@@ -72,6 +72,13 @@ nfpms:
           owner: root
           group: root
           mode: 0640
+      - src: assets/packages/agentstate
+        dst: /etc/hareply/agentstate
+        type: config
+        file_info:
+          owner: root
+          group: root
+          mode: 0640
     scripts:
       postinstall: "assets/packages/post-install.sh"
       preremove: "assets/packages/pre-uninstall.sh"
