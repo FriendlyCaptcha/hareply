@@ -1,5 +1,5 @@
 # hareply
-`hareply` is a tool that replies to [HAProxy's `agent-check`](https://www.haproxy.com/documentation/haproxy-configuration-tutorials/service-reliability/health-checks/#agent-checks) that replies with the contents of a given file.
+`hareply` is a small tool that replies to [HAProxy's `agent-check`](https://www.haproxy.com/documentation/haproxy-configuration-tutorials/service-reliability/health-checks/#agent-checks) with the contents of a given file.
 
 ## CLI usage
 
